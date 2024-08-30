@@ -1,9 +1,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <PropertyGroup>
-    <NoWarn>CS0618</NoWarn>
-    <NoWarn>$(NoWarn);NU1903</NoWarn>
-    <RollForward>Major</RollForward>
-    <IsTrimmable>true</IsTrimmable>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</IsTrimmable>
   </PropertyGroup>
 
   <Import Project="..\Directory.Build.props" />

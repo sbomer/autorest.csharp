@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using AutoRest.CSharp.Common.Utilities;
@@ -267,7 +268,7 @@ namespace AutoRest.CSharp.Mgmt.Decorator
             return isArgMatches;
         }
 
-        private static bool MatchEnum(Type parentPropertyType, EnumType childPropertyType)
+        private static bool MatchEnum([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] Type parentPropertyType, EnumType childPropertyType)
         {
             var parentProperties = parentPropertyType.GetProperties().ToList();
             if (parentProperties.Count != childPropertyType.Values.Count)

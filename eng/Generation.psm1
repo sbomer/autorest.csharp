@@ -4,6 +4,7 @@ $AutoRestPluginProject = Resolve-Path (Join-Path $repoRoot 'src' 'AutoRest.CShar
 
 function Invoke($command, $executePath=$repoRoot)
 {
+    write-host "------------------ INSIDE Invoke command $command ------------------ in dir $executePath"
     Write-Host "> $command"
     Push-Location $executePath
     if ($IsLinux -or $IsMacOs)
@@ -20,10 +21,12 @@ function Invoke($command, $executePath=$repoRoot)
     {
         Write-Error "Command failed to execute: $command"
     }
+    write-host "----------------- DONE invoke command -----"
 }
 
 function Invoke-AutoRest($baseOutput, $projectName, $autoRestArguments, $sharedSource, $fast, $debug)
 {
+    write-host "---------- INSIDE Invoke-AutoRest $projectName, baseoutput $baseOutput ----------"
     $outputPath = $baseOutput
     if(Test-Path "$outputPath/*.sln") {
         $outputPath = Join-Path $outputPath "src"
@@ -103,10 +106,12 @@ function Invoke-TypeSpec($baseOutput, $projectName, $mainFile, $arguments="", $s
         $buildDir = $buildDir -replace ".{4}$"
     }
     Invoke "dotnet build $buildDir --verbosity quiet /nologo"
+    write-host "----------------- DONE Invoke-TypeSpec -----"
 }
 
 function Invoke-TypeSpecSetup()
 {
+    write-host "------------------ INSIDE Invoke-TypeSpecSetup ------------------"
     # build emitter
     $emitterPath = Join-Path $PSScriptRoot ".." "src" "TypeSpec.Extension" "Emitter.Csharp"
     $emitterPath = Resolve-Path -Path $emitterPath
@@ -114,12 +119,14 @@ function Invoke-TypeSpecSetup()
 
     Try 
     {
+        write-host " ------------- running command npm run build ----- in dir ------ $emitterPath"
         npm run build
     }
     Finally 
     {
         Pop-Location
     }
+    write-host "----------------- DONE Invoke-TypeSpecSetup -----"
 }
 
 function Get-AutoRestProject()

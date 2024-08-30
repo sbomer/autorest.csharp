@@ -6,6 +6,7 @@
     <Nullable>annotations</Nullable>
     <IncludeSharedSourceInLocalBuild>false</IncludeSharedSourceInLocalBuild>
     <NoWarn>$(NoWarn);CS0618</NoWarn>
+    <IsTrimmable>true</IsTrimmable>
   </PropertyGroup>
 
   <ItemGroup>

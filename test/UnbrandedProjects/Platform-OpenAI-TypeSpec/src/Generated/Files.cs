@@ -5,6 +5,7 @@
 using System;
 using System.ClientModel;
 using System.ClientModel.Primitives;
+using System.Text.Json;
 using System.Threading.Tasks;
 using OpenAI.Models;
 
@@ -365,7 +366,7 @@ namespace OpenAI
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
             ClientResult result = await DownloadAsync(fileId, null).ConfigureAwait(false);
-            return ClientResult.FromValue(result.GetRawResponse().Content.ToObjectFromJson<string>(), result.GetRawResponse());
+            return ClientResult.FromValue(new Utf8JsonReader(result.GetRawResponse().Content.ToMemory().Span).GetString(), result.GetRawResponse());
         }
 
         /// <summary> Returns the contents of the specified file. </summary>
@@ -378,7 +379,7 @@ namespace OpenAI
             Argument.AssertNotNullOrEmpty(fileId, nameof(fileId));
 
             ClientResult result = Download(fileId, null);
-            return ClientResult.FromValue(result.GetRawResponse().Content.ToObjectFromJson<string>(), result.GetRawResponse());
+            return ClientResult.FromValue(new Utf8JsonReader(result.GetRawResponse().Content.ToMemory().Span).GetString(), result.GetRawResponse());
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
     <IsTestGenerationTestProject Condition="$(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestGenerationTestProject>
     <IsNoDocProject Condition="$(MSBuildProjectName.Contains('NoDocs'))">true</IsNoDocProject>
     <IsUnbranded>true</IsUnbranded>
+    <IsTrimmable Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net6.0'))">true</IsTrimmable>
   </PropertyGroup>
 
   <PropertyGroup>

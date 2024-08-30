@@ -4,6 +4,7 @@
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoRest.CSharp.Common.Input;
 using AutoRest.CSharp.Common.Output.Models.Types;
@@ -199,7 +200,7 @@ namespace AutoRest.CSharp.Mgmt.Output
             return descendantTypes.Contains(Type);
         }
 
-        private static bool ShouldIncludeArmCoreType(Type type)
+        private static bool ShouldIncludeArmCoreType([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] Type type)
         {
             return SystemObjectType.TryGetCtor(type, ReferenceClassFinder.InitializationCtorAttributeName, out _);
         }

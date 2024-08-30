@@ -3,13 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Core;
 
 namespace AutoRest.TestServer.Tests.Infrastructure
 {
-    public abstract class TestServerSessionBase<T> : IAsyncDisposable where T : TestServerBase
+    public abstract class TestServerSessionBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T> : IAsyncDisposable where T : TestServerBase
     {
         private static readonly object _serverCacheLock = new object();
         private static T _serverCache;

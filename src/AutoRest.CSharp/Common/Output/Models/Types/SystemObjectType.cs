@@ -37,6 +37,7 @@ namespace AutoRest.CSharp.Output.Models.Types
             return result;
         }
 
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)]
         private readonly Type _type;
         private readonly IReadOnlyDictionary<string, ObjectTypeProperty> _backingProperties;
 
@@ -58,7 +59,7 @@ namespace AutoRest.CSharp.Output.Models.Types
 
         internal Type SystemType => _type;
 
-        internal static bool TryGetCtor(Type type, string attributeType, [MaybeNullWhen(false)] out ConstructorInfo result)
+        internal static bool TryGetCtor([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] Type type, string attributeType, [MaybeNullWhen(false)] out ConstructorInfo result)
         {
             foreach (var ctor in type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.CreateInstance))
             {
@@ -73,7 +74,7 @@ namespace AutoRest.CSharp.Output.Models.Types
             return false;
         }
 
-        private static ConstructorInfo GetCtor(Type type, string attributeType)
+        private static ConstructorInfo GetCtor([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)] Type type, string attributeType)
         {
             if (TryGetCtor(type, attributeType, out var ctor))
                 return ctor;

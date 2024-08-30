@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.Core;
 using Azure.Core.TestFramework;
+using Azure.ResourceManager.Resources;
 using Azure.ResourceManager.TestFramework;
 using MgmtMockAndSample.Models;
 
@@ -30,8 +31,9 @@ namespace MgmtMockAndSample.Tests.Mock
         {
             // Example: Create or update guest configuration assignment
 
-            ResourceIdentifier scope = new ResourceIdentifier(string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}", "00000000-0000-0000-0000-000000000000", "myResourceGroupName", "myVMName"));
-            var collection = GetArmClient().GetGuestConfigurationAssignments(scope);
+            ResourceIdentifier resourceGroupResourceId = ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroupName");
+            ResourceGroupResource resourceGroupResource = GetArmClient().GetResourceGroupResource(resourceGroupResourceId);
+            var collection = resourceGroupResource.GetGuestConfigurationAssignments("myVMName");
             await collection.CreateOrUpdateAsync(WaitUntil.Completed, "NotInstalledApplicationForWindows", new GuestConfigurationAssignmentData()
             {
                 Properties = new GuestConfigurationAssignmentProperties()
@@ -48,8 +50,9 @@ namespace MgmtMockAndSample.Tests.Mock
         {
             // Example: Get a guest configuration assignment
 
-            ResourceIdentifier scope = new ResourceIdentifier(string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}", "00000000-0000-0000-0000-000000000000", "myResourceGroupName", "myVMName"));
-            var collection = GetArmClient().GetGuestConfigurationAssignments(scope);
+            ResourceIdentifier resourceGroupResourceId = ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroupName");
+            ResourceGroupResource resourceGroupResource = GetArmClient().GetResourceGroupResource(resourceGroupResourceId);
+            var collection = resourceGroupResource.GetGuestConfigurationAssignments("myVMName");
             await collection.ExistsAsync("SecureProtocol");
         }
 
@@ -58,8 +61,9 @@ namespace MgmtMockAndSample.Tests.Mock
         {
             // Example: Get a guest configuration assignment
 
-            ResourceIdentifier scope = new ResourceIdentifier(string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}", "00000000-0000-0000-0000-000000000000", "myResourceGroupName", "myVMName"));
-            var collection = GetArmClient().GetGuestConfigurationAssignments(scope);
+            ResourceIdentifier resourceGroupResourceId = ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroupName");
+            ResourceGroupResource resourceGroupResource = GetArmClient().GetResourceGroupResource(resourceGroupResourceId);
+            var collection = resourceGroupResource.GetGuestConfigurationAssignments("myVMName");
             await collection.GetAsync("SecureProtocol");
         }
 
@@ -68,8 +72,9 @@ namespace MgmtMockAndSample.Tests.Mock
         {
             // Example: List all guest configuration assignments for a virtual machine
 
-            ResourceIdentifier scope = new ResourceIdentifier(string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}", "00000000-0000-0000-0000-000000000000", "myResourceGroupName", "myVMName"));
-            var collection = GetArmClient().GetGuestConfigurationAssignments(scope);
+            ResourceIdentifier resourceGroupResourceId = ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroupName");
+            ResourceGroupResource resourceGroupResource = GetArmClient().GetResourceGroupResource(resourceGroupResourceId);
+            var collection = resourceGroupResource.GetGuestConfigurationAssignments("myVMName");
             await foreach (var _ in collection.GetAllAsync())
             {
             }
@@ -80,8 +85,9 @@ namespace MgmtMockAndSample.Tests.Mock
         {
             // Example: Get a guest configuration assignment
 
-            ResourceIdentifier scope = new ResourceIdentifier(string.Format("/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.Compute/virtualMachines/{2}", "00000000-0000-0000-0000-000000000000", "myResourceGroupName", "myVMName"));
-            var collection = GetArmClient().GetGuestConfigurationAssignments(scope);
+            ResourceIdentifier resourceGroupResourceId = ResourceGroupResource.CreateResourceIdentifier("00000000-0000-0000-0000-000000000000", "myResourceGroupName");
+            ResourceGroupResource resourceGroupResource = GetArmClient().GetResourceGroupResource(resourceGroupResourceId);
+            var collection = resourceGroupResource.GetGuestConfigurationAssignments("myVMName");
             await collection.GetIfExistsAsync("SecureProtocol");
         }
     }

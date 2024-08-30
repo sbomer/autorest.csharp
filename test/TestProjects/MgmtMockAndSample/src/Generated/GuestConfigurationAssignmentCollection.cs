@@ -16,18 +16,20 @@ using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Resources;
 
 namespace MgmtMockAndSample
 {
     /// <summary>
     /// A class representing a collection of <see cref="GuestConfigurationAssignmentResource"/> and their operations.
-    /// Each <see cref="GuestConfigurationAssignmentResource"/> in the collection will belong to the same instance of <see cref="ArmResource"/>.
-    /// To get a <see cref="GuestConfigurationAssignmentCollection"/> instance call the GetGuestConfigurationAssignments method from an instance of <see cref="ArmResource"/>.
+    /// Each <see cref="GuestConfigurationAssignmentResource"/> in the collection will belong to the same instance of <see cref="ResourceGroupResource"/>.
+    /// To get a <see cref="GuestConfigurationAssignmentCollection"/> instance call the GetGuestConfigurationAssignments method from an instance of <see cref="ResourceGroupResource"/>.
     /// </summary>
     public partial class GuestConfigurationAssignmentCollection : ArmCollection, IEnumerable<GuestConfigurationAssignmentResource>, IAsyncEnumerable<GuestConfigurationAssignmentResource>
     {
         private readonly ClientDiagnostics _guestConfigurationAssignmentClientDiagnostics;
         private readonly GuestConfigurationAssignmentsRestOperations _guestConfigurationAssignmentRestClient;
+        private readonly string _vmName;
 
         /// <summary> Initializes a new instance of the <see cref="GuestConfigurationAssignmentCollection"/> class for mocking. </summary>
         protected GuestConfigurationAssignmentCollection()
@@ -37,8 +39,12 @@ namespace MgmtMockAndSample
         /// <summary> Initializes a new instance of the <see cref="GuestConfigurationAssignmentCollection"/> class. </summary>
         /// <param name="client"> The client parameters to use in these operations. </param>
         /// <param name="id"> The identifier of the parent resource that is the target of operations. </param>
-        internal GuestConfigurationAssignmentCollection(ArmClient client, ResourceIdentifier id) : base(client, id)
+        /// <param name="vmName"> The name of the virtual machine. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vmName"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vmName"/> is an empty string, and was expected to be non-empty. </exception>
+        internal GuestConfigurationAssignmentCollection(ArmClient client, ResourceIdentifier id, string vmName) : base(client, id)
         {
+            _vmName = vmName;
             _guestConfigurationAssignmentClientDiagnostics = new ClientDiagnostics("MgmtMockAndSample", GuestConfigurationAssignmentResource.ResourceType.Namespace, Diagnostics);
             TryGetApiVersion(GuestConfigurationAssignmentResource.ResourceType, out string guestConfigurationAssignmentApiVersion);
             _guestConfigurationAssignmentRestClient = new GuestConfigurationAssignmentsRestOperations(Pipeline, Diagnostics.ApplicationId, Endpoint, guestConfigurationAssignmentApiVersion);
@@ -49,8 +55,8 @@ namespace MgmtMockAndSample
 
         internal static void ValidateResourceId(ResourceIdentifier id)
         {
-            if (id.ResourceType != "Microsoft.Compute/virtualMachines")
-                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Invalid resource type {0} expected {1}", id.ResourceType, "Microsoft.Compute/virtualMachines"), nameof(id));
+            if (id.ResourceType != ResourceGroupResource.ResourceType)
+                throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Invalid resource type {0} expected {1}", id.ResourceType, ResourceGroupResource.ResourceType), nameof(id));
         }
 
         /// <summary>
@@ -89,8 +95,8 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = await _guestConfigurationAssignmentRestClient.CreateOrUpdateAsync(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, data, cancellationToken).ConfigureAwait(false);
-                var uri = _guestConfigurationAssignmentRestClient.CreateCreateOrUpdateRequestUri(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, data);
+                var response = await _guestConfigurationAssignmentRestClient.CreateOrUpdateAsync(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, data, cancellationToken).ConfigureAwait(false);
+                var uri = _guestConfigurationAssignmentRestClient.CreateCreateOrUpdateRequestUri(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, data);
                 var rehydrationToken = NextLinkOperationImplementation.GetRehydrationToken(RequestMethod.Put, uri.ToUri(), uri.ToString(), "None", null, OperationFinalStateVia.OriginalUri.ToString());
                 var operation = new MgmtMockAndSampleArmOperation<GuestConfigurationAssignmentResource>(Response.FromValue(new GuestConfigurationAssignmentResource(Client, response), response.GetRawResponse()), rehydrationToken);
                 if (waitUntil == WaitUntil.Completed)
@@ -140,8 +146,8 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = _guestConfigurationAssignmentRestClient.CreateOrUpdate(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, data, cancellationToken);
-                var uri = _guestConfigurationAssignmentRestClient.CreateCreateOrUpdateRequestUri(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, data);
+                var response = _guestConfigurationAssignmentRestClient.CreateOrUpdate(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, data, cancellationToken);
+                var uri = _guestConfigurationAssignmentRestClient.CreateCreateOrUpdateRequestUri(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, data);
                 var rehydrationToken = NextLinkOperationImplementation.GetRehydrationToken(RequestMethod.Put, uri.ToUri(), uri.ToString(), "None", null, OperationFinalStateVia.OriginalUri.ToString());
                 var operation = new MgmtMockAndSampleArmOperation<GuestConfigurationAssignmentResource>(Response.FromValue(new GuestConfigurationAssignmentResource(Client, response), response.GetRawResponse()), rehydrationToken);
                 if (waitUntil == WaitUntil.Completed)
@@ -188,7 +194,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken).ConfigureAwait(false);
+                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken).ConfigureAwait(false);
                 if (response.Value == null)
                     throw new RequestFailedException(response.GetRawResponse());
                 return Response.FromValue(new GuestConfigurationAssignmentResource(Client, response.Value), response.GetRawResponse());
@@ -233,7 +239,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken);
+                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken);
                 if (response.Value == null)
                     throw new RequestFailedException(response.GetRawResponse());
                 return Response.FromValue(new GuestConfigurationAssignmentResource(Client, response.Value), response.GetRawResponse());
@@ -270,7 +276,7 @@ namespace MgmtMockAndSample
         /// <returns> An async collection of <see cref="GuestConfigurationAssignmentResource"/> that may take multiple service requests to iterate over. </returns>
         public virtual AsyncPageable<GuestConfigurationAssignmentResource> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => _guestConfigurationAssignmentRestClient.CreateListRequest(Id.SubscriptionId, Id.ResourceGroupName, Id.Name);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => _guestConfigurationAssignmentRestClient.CreateListRequest(Id.SubscriptionId, Id.ResourceGroupName, _vmName);
             return GeneratorPageableHelpers.CreateAsyncPageable(FirstPageRequest, null, e => new GuestConfigurationAssignmentResource(Client, GuestConfigurationAssignmentData.DeserializeGuestConfigurationAssignmentData(e)), _guestConfigurationAssignmentClientDiagnostics, Pipeline, "GuestConfigurationAssignmentCollection.GetAll", "value", null, cancellationToken);
         }
 
@@ -299,7 +305,7 @@ namespace MgmtMockAndSample
         /// <returns> A collection of <see cref="GuestConfigurationAssignmentResource"/> that may take multiple service requests to iterate over. </returns>
         public virtual Pageable<GuestConfigurationAssignmentResource> GetAll(CancellationToken cancellationToken = default)
         {
-            HttpMessage FirstPageRequest(int? pageSizeHint) => _guestConfigurationAssignmentRestClient.CreateListRequest(Id.SubscriptionId, Id.ResourceGroupName, Id.Name);
+            HttpMessage FirstPageRequest(int? pageSizeHint) => _guestConfigurationAssignmentRestClient.CreateListRequest(Id.SubscriptionId, Id.ResourceGroupName, _vmName);
             return GeneratorPageableHelpers.CreatePageable(FirstPageRequest, null, e => new GuestConfigurationAssignmentResource(Client, GuestConfigurationAssignmentData.DeserializeGuestConfigurationAssignmentData(e)), _guestConfigurationAssignmentClientDiagnostics, Pipeline, "GuestConfigurationAssignmentCollection.GetAll", "value", null, cancellationToken);
         }
 
@@ -336,7 +342,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken: cancellationToken).ConfigureAwait(false);
                 return Response.FromValue(response.Value != null, response.GetRawResponse());
             }
             catch (Exception e)
@@ -379,7 +385,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken: cancellationToken);
+                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken: cancellationToken);
                 return Response.FromValue(response.Value != null, response.GetRawResponse());
             }
             catch (Exception e)
@@ -422,7 +428,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken: cancellationToken).ConfigureAwait(false);
+                var response = await _guestConfigurationAssignmentRestClient.GetAsync(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (response.Value == null)
                     return new NoValueResponse<GuestConfigurationAssignmentResource>(response.GetRawResponse());
                 return Response.FromValue(new GuestConfigurationAssignmentResource(Client, response.Value), response.GetRawResponse());
@@ -467,7 +473,7 @@ namespace MgmtMockAndSample
             scope.Start();
             try
             {
-                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, Id.Name, guestConfigurationAssignmentName, cancellationToken: cancellationToken);
+                var response = _guestConfigurationAssignmentRestClient.Get(Id.SubscriptionId, Id.ResourceGroupName, _vmName, guestConfigurationAssignmentName, cancellationToken: cancellationToken);
                 if (response.Value == null)
                     return new NoValueResponse<GuestConfigurationAssignmentResource>(response.GetRawResponse());
                 return Response.FromValue(new GuestConfigurationAssignmentResource(Client, response.Value), response.GetRawResponse());

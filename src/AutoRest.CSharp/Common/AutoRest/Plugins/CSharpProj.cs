@@ -113,6 +113,7 @@ namespace AutoRest.CSharp.AutoRest.Plugins
 
         private string GetCSProj()
         {
+            Console.WriteLine("############### GetCSProj");
             var builder = new CSProjWriter()
             {
                 TargetFramework = "netstandard2.0",

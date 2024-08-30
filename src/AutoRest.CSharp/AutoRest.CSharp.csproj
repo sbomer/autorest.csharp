@@ -12,8 +12,8 @@
     <RollForward>Minor</RollForward>
     <DefineConstants>$(DefineConstants);EXPERIMENTAL</DefineConstants>
     <NoDefaultExcludes>true</NoDefaultExcludes>
+    <RollForward>Major</RollForward>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Azure.Core" />

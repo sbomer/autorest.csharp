@@ -312,5 +312,79 @@ namespace MgmtMockAndSample.Mocking
         {
             return GetFirewallPolicies().Get(firewallPolicyName, expand, cancellationToken);
         }
+
+        /// <summary> Gets a collection of GuestConfigurationAssignmentResources in the ResourceGroupResource. </summary>
+        /// <param name="vmName"> The name of the virtual machine. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vmName"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vmName"/> is an empty string, and was expected to be non-empty. </exception>
+        /// <returns> An object representing collection of GuestConfigurationAssignmentResources and their operations over a GuestConfigurationAssignmentResource. </returns>
+        public virtual GuestConfigurationAssignmentCollection GetGuestConfigurationAssignments(string vmName)
+        {
+            return new GuestConfigurationAssignmentCollection(Client, Id, vmName);
+        }
+
+        /// <summary>
+        /// Get information about a guest configuration assignment
+        /// <list type="bullet">
+        /// <item>
+        /// <term>Request Path</term>
+        /// <description>/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/providers/Microsoft.GuestConfiguration/guestConfigurationAssignments/{guestConfigurationAssignmentName}</description>
+        /// </item>
+        /// <item>
+        /// <term>Operation Id</term>
+        /// <description>GuestConfigurationAssignments_Get</description>
+        /// </item>
+        /// <item>
+        /// <term>Default Api Version</term>
+        /// <description>2022-01-25</description>
+        /// </item>
+        /// <item>
+        /// <term>Resource</term>
+        /// <description><see cref="GuestConfigurationAssignmentResource"/></description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="vmName"> The name of the virtual machine. </param>
+        /// <param name="guestConfigurationAssignmentName"> The guest configuration assignment name. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vmName"/> or <paramref name="guestConfigurationAssignmentName"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vmName"/> or <paramref name="guestConfigurationAssignmentName"/> is an empty string, and was expected to be non-empty. </exception>
+        [ForwardsClientCalls]
+        public virtual async Task<Response<GuestConfigurationAssignmentResource>> GetGuestConfigurationAssignmentAsync(string vmName, string guestConfigurationAssignmentName, CancellationToken cancellationToken = default)
+        {
+            return await GetGuestConfigurationAssignments(vmName).GetAsync(guestConfigurationAssignmentName, cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Get information about a guest configuration assignment
+        /// <list type="bullet">
+        /// <item>
+        /// <term>Request Path</term>
+        /// <description>/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachines/{vmName}/providers/Microsoft.GuestConfiguration/guestConfigurationAssignments/{guestConfigurationAssignmentName}</description>
+        /// </item>
+        /// <item>
+        /// <term>Operation Id</term>
+        /// <description>GuestConfigurationAssignments_Get</description>
+        /// </item>
+        /// <item>
+        /// <term>Default Api Version</term>
+        /// <description>2022-01-25</description>
+        /// </item>
+        /// <item>
+        /// <term>Resource</term>
+        /// <description><see cref="GuestConfigurationAssignmentResource"/></description>
+        /// </item>
+        /// </list>
+        /// </summary>
+        /// <param name="vmName"> The name of the virtual machine. </param>
+        /// <param name="guestConfigurationAssignmentName"> The guest configuration assignment name. </param>
+        /// <param name="cancellationToken"> The cancellation token to use. </param>
+        /// <exception cref="ArgumentNullException"> <paramref name="vmName"/> or <paramref name="guestConfigurationAssignmentName"/> is null. </exception>
+        /// <exception cref="ArgumentException"> <paramref name="vmName"/> or <paramref name="guestConfigurationAssignmentName"/> is an empty string, and was expected to be non-empty. </exception>
+        [ForwardsClientCalls]
+        public virtual Response<GuestConfigurationAssignmentResource> GetGuestConfigurationAssignment(string vmName, string guestConfigurationAssignmentName, CancellationToken cancellationToken = default)
+        {
+            return GetGuestConfigurationAssignments(vmName).Get(guestConfigurationAssignmentName, cancellationToken);
+        }
     }
 }

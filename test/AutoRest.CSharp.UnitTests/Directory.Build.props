@@ -7,5 +7,5 @@
     <IsUnitTestProject>true</IsUnitTestProject>
   </PropertyGroup>
 
-  <Import Project="..\..\Directory.Build.props" />
+  <Import Project="..\Directory.Build.props" />
 </Project>

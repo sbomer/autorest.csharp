@@ -13,6 +13,7 @@ using Azure;
 using Azure.Core;
 using Azure.Core.Pipeline;
 using Azure.ResourceManager;
+using Azure.ResourceManager.Resources;
 
 namespace MgmtMockAndSample
 {
@@ -20,7 +21,7 @@ namespace MgmtMockAndSample
     /// A Class representing a GuestConfigurationAssignment along with the instance operations that can be performed on it.
     /// If you have a <see cref="ResourceIdentifier"/> you can construct a <see cref="GuestConfigurationAssignmentResource"/>
     /// from an instance of <see cref="ArmClient"/> using the GetGuestConfigurationAssignmentResource method.
-    /// Otherwise you can get one from its parent resource <see cref="ArmResource"/> using the GetGuestConfigurationAssignment method.
+    /// Otherwise you can get one from its parent resource <see cref="ResourceGroupResource"/> using the GetGuestConfigurationAssignment method.
     /// </summary>
     public partial class GuestConfigurationAssignmentResource : ArmResource
     {
