@@ -38,7 +38,8 @@ namespace AutoRest.CSharp.Common.Output.Expressions.Azure
             public override TypedValueExpression GetTypedResponseFromEnum(EnumType enumType, TypedValueExpression response)
             {
                 var rawResponse = new ResponseExpression(response);
-                return ResponseExpression.FromValue(EnumExpression.ToEnum(enumType, rawResponse.Content.ToObjectFromJson(typeof(string))), rawResponse);
+                // rawResponse.Content.ToMemory().Property(nameof(ReadOnlyMemory<byte>.Span))
+                return ResponseExpression.FromValue(EnumExpression.ToEnum(enumType, rawResponse.Content.MyToObjectFromJson(typeof(string), "In AzureExtensibleSnippets")), rawResponse);
             }
 
             public override TypedValueExpression GetTypedResponseFromBinaryData(Type responseType, TypedValueExpression response, string? contentType = null)
@@ -51,8 +52,8 @@ namespace AutoRest.CSharp.Common.Output.Expressions.Azure
                 return responseType == typeof(BinaryData)
                     ? ResponseExpression.FromValue(rawResponse.Content, rawResponse)
                     : responseType == typeof(AzureLocation) ?
-                    ResponseExpression.FromValue(New.Instance(typeof(AzureLocation), new[] { rawResponse.Content.ToObjectFromJson(typeof(string)) }), rawResponse)
-                    : ResponseExpression.FromValue(rawResponse.Content.ToObjectFromJson(responseType), rawResponse);
+                    ResponseExpression.FromValue(New.Instance(typeof(AzureLocation), new[] { rawResponse.Content.MyToObjectFromJson(typeof(string), "SVEN2")}), rawResponse)
+                    : ResponseExpression.FromValue(rawResponse.Content.MyToObjectFromJson(responseType, "SVEN3"), rawResponse);
             }
 
             public override MethodBodyStatement DeclareHttpMessage(MethodSignatureBase createRequestMethodSignature, out TypedValueExpression message)

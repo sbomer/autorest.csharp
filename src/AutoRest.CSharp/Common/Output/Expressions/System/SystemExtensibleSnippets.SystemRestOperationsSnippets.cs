@@ -41,7 +41,7 @@ namespace AutoRest.CSharp.Common.Output.Expressions.System
             public override TypedValueExpression GetTypedResponseFromEnum(EnumType enumType, TypedValueExpression result)
             {
                 var response = GetRawResponse(result);
-                return ClientResultExpression.FromValue(EnumExpression.ToEnum(enumType, response.Content.ToObjectFromJson(typeof(string))), response);
+                return ClientResultExpression.FromValue(EnumExpression.ToEnum(enumType, response.Content.MyToObjectFromJson(typeof(string), "SVEN WAS HERE")), response);
             }
 
             public override TypedValueExpression GetTypedResponseFromBinaryData(Type responseType, TypedValueExpression result, string? contentType = null)
@@ -51,9 +51,15 @@ namespace AutoRest.CSharp.Common.Output.Expressions.System
                 {
                     return ClientResultExpression.FromValue(rawResponse.Content.InvokeToString(), rawResponse);
                 }
+
+                if (responseType == typeof(string))
+                {
+                    return ClientResultExpression.FromValue(rawResponse.Content.MyToObjectFromJsonString(), rawResponse);
+                }
+
                 return responseType == typeof(BinaryData)
                     ? ClientResultExpression.FromValue(rawResponse.Content, rawResponse)
-                    : ClientResultExpression.FromValue(rawResponse.Content.ToObjectFromJson(responseType), rawResponse);
+                    : ClientResultExpression.FromValue(rawResponse.Content.MyToObjectFromJson(responseType, "SVEN5 " + responseType), rawResponse);
             }
 
             public override MethodBodyStatement DeclareHttpMessage(MethodSignatureBase createRequestMethodSignature, out TypedValueExpression message)

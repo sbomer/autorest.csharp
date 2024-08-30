@@ -342,7 +342,7 @@ extends:
                 AssemblyTitle = $"SDK Code Generation {Configuration.Namespace}",
                 Version = "1.0.0-beta.1",
                 PackageTags = Configuration.Namespace,
-                TargetFramework = "netstandard2.0",
+                TargetFramework = "net9.0",
                 LangVersion = "latest",
                 GenerateDocumentationFile = true,
             };
@@ -364,7 +364,8 @@ extends:
         private static readonly IReadOnlyList<CSProjWriter.CSProjDependencyPackage> _unbrandedDependencyPackages = new CSProjWriter.CSProjDependencyPackage[]
         {
             new("System.ClientModel", "1.1.0-beta.3"),
-            new("System.Text.Json", "4.7.2")
+            new("System.Text.Json", "8.0.0"),
+            new("System.Memory.Data", "8.0.0")
         };
 
         private static readonly IReadOnlyList<CSProjWriter.CSProjDependencyPackage> _brandedTestDependencyPackages = new CSProjWriter.CSProjDependencyPackage[]
@@ -413,7 +414,7 @@ extends:
         {
             var writer = new CSProjWriter()
             {
-                TargetFramework = "net8.0",
+                TargetFramework = "net9.0",
                 NoWarn = new("$(NoWarn);CS1591", "Ignore XML doc comments on test types and members")
             };
 

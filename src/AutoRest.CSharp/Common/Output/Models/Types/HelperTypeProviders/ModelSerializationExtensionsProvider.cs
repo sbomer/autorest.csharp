@@ -51,7 +51,10 @@ namespace AutoRest.CSharp.Output.Models.Types
                     type: typeof(BinaryData),
                     name: _sentinelBinaryDataName)
                 {
-                    InitializationValue = BinaryDataExpression.FromObjectAsJson(Literal("__EMPTY__"))
+                    InitializationValue = BinaryDataExpression.FromObjectAsJson(Literal("__EMPTTY__"))
+                    // InitializationValue = BinaryDataExpression.FromString(Literal("\"__Empty__\""))
+                    // Instead if BinaryData.FromObjectAsJson("__Empty__"), we want to do:
+                    // BinaryData.FromBytes()
                 };
             }
         }
